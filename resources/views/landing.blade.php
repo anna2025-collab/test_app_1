@@ -154,33 +154,6 @@
             background: #ffedd5;
         }
 
-        .ai-result {
-            display: grid;
-            gap: 8px;
-        }
-
-        .ai-result strong {
-            display: block;
-            font-size: 15px;
-            color: var(--ink);
-        }
-
-        .ai-result dl {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 4px 10px;
-            margin: 0;
-        }
-
-        .ai-result dt {
-            color: var(--muted);
-        }
-
-        .ai-result dd {
-            margin: 0;
-            color: var(--ink);
-        }
-
         @media (max-width: 840px) {
             main {
                 grid-template-columns: 1fr;
@@ -271,7 +244,7 @@
             }
 
             message.className = 'message success';
-            message.innerHTML = renderAiResult(data.data.ai);
+            message.textContent = data.data.ai.auto_reply;
             form.reset();
         } catch (error) {
             message.className = 'message error';
@@ -280,38 +253,6 @@
             button.disabled = false;
         }
     });
-
-    function renderAiResult(ai) {
-        const status = ai.available ? 'работает' : 'fallback';
-        const provider = escapeHtml(ai.provider || 'gemini');
-
-        return `
-            <div class="ai-result">
-                <strong>AI-анализ обращения</strong>
-                <dl>
-                    <dt>Провайдер</dt>
-                    <dd>${provider}</dd>
-                    <dt>Статус</dt>
-                    <dd>${status}</dd>
-                    <dt>Тональность</dt>
-                    <dd>${escapeHtml(ai.sentiment)}</dd>
-                    <dt>Категория</dt>
-                    <dd>${escapeHtml(ai.category)}</dd>
-                </dl>
-                <div>${escapeHtml(ai.auto_reply)}</div>
-            </div>
-        `;
-    }
-
-    function escapeHtml(value) {
-        return String(value ?? '').replace(/[&<>"']/g, (char) => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        })[char]);
-    }
 </script>
 </body>
 </html>
