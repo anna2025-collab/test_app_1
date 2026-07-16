@@ -5,8 +5,8 @@ info:
 servers:
   - url: https://testapp1-production-ba44.up.railway.app
     description: Рабочий API на Railway
-                   - url: http://localhost:8000
-                   description: Локальный запуск
+  - url: http://localhost:8000
+    description: Локальный запуск
 
 paths:
   /api/contact:
