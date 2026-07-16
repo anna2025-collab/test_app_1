@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <body>
-<h1>Your request was received</h1>
-<p>Hello, {{ $contact->name }}.</p>
+<h1>Ваше обращение получено</h1>
+<p>Здравствуйте, {{ $contact->name }}.</p>
 <p>{{ $contact->ai_auto_reply }}</p>
-<p>Your message:</p>
+<p>Ваше сообщение:</p>
 <p>{{ $contact->comment }}</p>
 </body>
 </html>

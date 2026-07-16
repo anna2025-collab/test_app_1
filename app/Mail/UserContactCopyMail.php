@@ -13,14 +13,12 @@ class UserContactCopyMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public readonly ContactRequest $contact)
-    {
-    }
+    public function __construct(public readonly ContactRequest $contact) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your request was received',
+            subject: 'Ваше обращение получено',
         );
     }
 

@@ -13,14 +13,12 @@ class OwnerContactMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public readonly ContactRequest $contact)
-    {
-    }
+    public function __construct(public readonly ContactRequest $contact) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New contact request #'.$this->contact->id,
+            subject: 'Новое обращение #'.$this->contact->id,
         );
     }
 
