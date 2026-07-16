@@ -1,0 +1,95 @@
+openapi: 3.0.3
+info:
+  title: Developer Landing API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+paths:
+  /api/contact:
+    post:
+      summary: Submit contact request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - phone
+                - email
+                - comment
+              properties:
+                name:
+                  type: string
+                  minLength: 2
+                  maxLength: 100
+                phone:
+                  type: string
+                  example: "+79990000000"
+                email:
+                  type: string
+                  format: email
+                comment:
+                  type: string
+                  minLength: 10
+                  maxLength: 2000
+      responses:
+        "201":
+          description: Contact request accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+        "429":
+          description: Too many requests
+        "500":
+          description: Processing error
+  /api/health:
+    get:
+      summary: Service health
+      responses:
+        "200":
+          description: Health state
+  /api/metrics:
+    get:
+      summary: Contact metrics
+      responses:
+        "200":
+          description: Metrics from JSON file and database count
+components:
+  schemas:
+    ContactResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            ai:
+              type: object
+              properties:
+                available:
+                  type: boolean
+                sentiment:
+                  type: string
+                category:
+                  type: string
+                auto_reply:
+                  type: string
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
