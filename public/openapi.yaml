@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
-  title: Developer Landing API
+  title: API лендинга разработчика
   version: 1.0.0
 servers:
   - url: http://localhost:8000
 paths:
   /api/contact:
     post:
-      summary: Submit contact request
+      summary: Отправить обращение
       requestBody:
         required: true
         content:
@@ -53,16 +53,16 @@ paths:
           description: Ошибка обработки обращения
   /api/health:
     get:
-      summary: Service health
+      summary: Проверка состояния сервиса
       responses:
         "200":
-          description: Health state
+          description: Состояние сервиса
   /api/metrics:
     get:
-      summary: Contact metrics
+      summary: Метрики обращений
       responses:
         "200":
-          description: Metrics from JSON file and database count
+          description: Метрики из JSON-файла и количество обращений в базе данных
 components:
   schemas:
     ContactResponse:

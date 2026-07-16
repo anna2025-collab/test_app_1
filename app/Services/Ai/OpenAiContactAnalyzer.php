@@ -13,7 +13,7 @@ class OpenAiContactAnalyzer
         $apiKey = config('services.openai.api_key');
 
         if (! $apiKey) {
-            return $this->fallback('OPENAI_API_KEY is not configured.');
+            return $this->fallback('OPENAI_API_KEY не настроен.');
         }
 
         try {
@@ -26,12 +26,12 @@ class OpenAiContactAnalyzer
                     'input' => [
                         [
                             'role' => 'system',
-                            'content' => 'Analyze a website contact form request. Return only JSON matching the schema.',
+                            'content' => 'Проанализируй обращение с формы обратной связи. Верни только JSON, соответствующий схеме.',
                         ],
                         [
                             'role' => 'user',
                             'content' => sprintf(
-                                "Name: %s\nPhone: %s\nEmail: %s\nComment: %s",
+                                "Имя: %s\nТелефон: %s\nEmail: %s\nКомментарий: %s",
                                 $contact['name'],
                                 $contact['phone'],
                                 $contact['email'],
@@ -69,14 +69,14 @@ class OpenAiContactAnalyzer
                 ]);
 
             if (! $response->successful()) {
-                return $this->fallback('OpenAI request failed with status '.$response->status().'.');
+                return $this->fallback('Запрос OpenAI завершился ошибкой со статусом '.$response->status().'.');
             }
 
             $text = $this->extractText($response->json());
             $analysis = json_decode($text, true);
 
             if (! is_array($analysis)) {
-                return $this->fallback('OpenAI returned non-JSON content.');
+                return $this->fallback('OpenAI вернул невалидный JSON.');
             }
 
             return [
