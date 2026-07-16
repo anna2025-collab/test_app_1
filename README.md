@@ -1,6 +1,6 @@
 # Backend-сервис для лендинга разработчика
 
-Laravel-проект для лендинг-презентации разработчика с REST API, хранением обращений в MySQL, email-уведомлениями, логированием запросов в JSONL, файловым rate limiting, метриками в JSON, AI-анализом через OpenAI с graceful fallback, Blade-фронтом и OpenAPI-документацией.
+Laravel-проект для лендинг-презентации разработчика с REST API, хранением обращений в MySQL, email-уведомлениями, логированием запросов в JSONL, файловым rate limiting, метриками в JSON, AI-анализом через Google Gemini/OpenAI с graceful fallback, Blade-фронтом и OpenAPI-документацией.
 
 ## Стек технологий
 
@@ -9,7 +9,7 @@ Laravel-проект для лендинг-презентации разрабо
 - Файловое хранение: JSON/JSONL для rate limiting, метрик и логов запросов
 - Frontend: Blade, CSS, Fetch API
 - Email: Laravel Mail
-- AI: OpenAI Responses API через Laravel HTTP client
+- AI: Google Gemini API или OpenAI Responses API через Laravel HTTP client
 - Документация: OpenAPI 3.0 и Swagger UI
 
 ## Запуск проекта
@@ -42,9 +42,15 @@ MAIL_MAILER=log
 MAIL_FROM_ADDRESS=hello@example.com
 CONTACT_OWNER_EMAIL=owner@example.com
 
+AI_PROVIDER=gemini
+
 OPENAI_API_KEY=
 OPENAI_MODEL=gpt-4.1-mini
 OPENAI_TIMEOUT=8
+
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-3.5-flash
+GEMINI_TIMEOUT=8
 
 CONTACT_RATE_LIMIT_MAX=5
 CONTACT_RATE_LIMIT_DECAY_SECONDS=300
@@ -80,7 +86,9 @@ OpenAPI-файл: `http://127.0.0.1:8000/openapi.yaml`
 - `routes/api.php` - API-маршруты
 - `app/Http/Controllers/Api/ContactController.php` - endpoint формы обратной связи
 - `app/Services/ContactService.php` - полный сценарий обработки обращения
-- `app/Services/Ai/OpenAiContactAnalyzer.php` - интеграция с OpenAI и fallback
+- `app/Services/Ai/ContactAnalyzer.php` - общий интерфейс AI-анализатора
+- `app/Services/Ai/GeminiContactAnalyzer.php` - интеграция с Google Gemini API
+- `app/Services/Ai/OpenAiContactAnalyzer.php` - интеграция с OpenAI Responses API
 - `app/Repositories/ContactRepository.php` - сохранение обращений в MySQL
 - `app/Repositories/JsonFileRepository.php` - работа с JSON-файлами
 - `app/Http/Middleware/FileRateLimit.php` - защита от спама
@@ -188,21 +196,40 @@ curl http://127.0.0.1:8000/api/metrics
 
 ## AI-интеграция
 
-AI-логика находится в `app/Services/Ai/OpenAiContactAnalyzer.php`.
+AI-логика находится в `app/Services/Ai`.
 
-Backend отправляет данные обращения в OpenAI Responses API и просит вернуть структурированный JSON:
+Backend отправляет данные обращения выбранному AI-провайдеру и просит вернуть структурированный JSON:
 
 - `sentiment`: тональность обращения - `positive`, `neutral` или `negative`
 - `category`: тип обращения - `project_request`, `support`, `partnership`, `hiring` или `other`
 - `auto_reply`: короткий автоматический ответ пользователю
 
-Используемый system prompt:
+Основной провайдер выбирается через `.env`:
 
-```text
-Проанализируй обращение с формы обратной связи. Верни только JSON, соответствующий схеме.
+```dotenv
+AI_PROVIDER=gemini
+GEMINI_API_KEY=your_gemini_key
+GEMINI_MODEL=gemini-3.5-flash
 ```
 
-Fallback реализован внутри `OpenAiContactAnalyzer`. Если `OPENAI_API_KEY` не задан, OpenAI недоступен, произошел timeout или API вернул невалидный JSON, сервис продолжает работу и использует значения по умолчанию:
+Для OpenAI можно переключить:
+
+```dotenv
+AI_PROVIDER=openai
+OPENAI_API_KEY=your_openai_key
+OPENAI_MODEL=gpt-4.1-mini
+```
+
+Gemini API key создается в Google AI Studio: `https://aistudio.google.com/app/apikey`.
+
+Используемый prompt для Gemini:
+
+```text
+Проанализируй обращение с формы обратной связи.
+Верни только JSON без markdown и пояснений.
+```
+
+Fallback реализован в AI-анализаторах. Если `GEMINI_API_KEY`/`OPENAI_API_KEY` не задан, провайдер недоступен, произошел timeout или API вернул невалидный JSON, сервис продолжает работу и использует значения по умолчанию:
 
 - `available`: `false`
 - `sentiment`: `neutral`
@@ -252,7 +279,7 @@ AI использовался для подготовки начальной р�
 
 - слоистая структура Laravel-проекта
 - контроллеры, сервисы, репозитории и middleware
-- интеграция OpenAI с fallback-логикой
+- интеграция Gemini/OpenAI с fallback-логикой
 - OpenAPI-документация
 - README
 - Blade-форма обратной связи
@@ -261,7 +288,8 @@ AI использовался для подготовки начальной р�
 
 - маршрутизация и middleware bootstrap для Laravel 13 были сверены с установленными файлами фреймворка
 - цикл обработки обращения приведен к требованию ТЗ
-- OpenAI-запрос реализован через актуальный Responses API
+- Gemini-запрос реализован через официальный REST endpoint Interactions API
+- OpenAI-запрос оставлен как альтернативный провайдер через Responses API
 - хранение разделено по ТЗ: MySQL для обращений, JSON для rate limiting, метрик и логов
 - фронтенд переведен на русский язык
 - email-шаблоны и темы писем переведены на русский язык

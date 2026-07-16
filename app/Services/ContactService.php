@@ -6,17 +6,16 @@ use App\Mail\OwnerContactMail;
 use App\Mail\UserContactCopyMail;
 use App\Models\ContactRequest;
 use App\Repositories\ContactRepository;
-use App\Services\Ai\OpenAiContactAnalyzer;
+use App\Services\Ai\ContactAnalyzer;
 use Illuminate\Support\Facades\Mail;
 
 class ContactService
 {
     public function __construct(
         private readonly ContactRepository $contacts,
-        private readonly OpenAiContactAnalyzer $ai,
+        private readonly ContactAnalyzer $ai,
         private readonly MetricsService $metrics,
-    ) {
-    }
+    ) {}
 
     public function handle(array $payload): ContactRequest
     {

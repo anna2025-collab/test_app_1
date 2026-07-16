@@ -6,8 +6,10 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
-class OpenAiContactAnalyzer
+class OpenAiContactAnalyzer implements ContactAnalyzer
 {
+    use ContactAnalysisFallback;
+
     public function analyze(array $contact): array
     {
         $apiKey = config('services.openai.api_key');
@@ -108,21 +110,5 @@ class OpenAiContactAnalyzer
         }
 
         return '';
-    }
-
-    private function fallback(string $error): array
-    {
-        return [
-            'available' => false,
-            'sentiment' => 'neutral',
-            'category' => 'other',
-            'auto_reply' => $this->defaultReply(),
-            'error' => $error,
-        ];
-    }
-
-    private function defaultReply(): string
-    {
-        return 'Спасибо за обращение. Я получил ваше сообщение и скоро свяжусь с вами.';
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Services\Ai\ContactAnalyzer;
+use App\Services\Ai\GeminiContactAnalyzer;
+use App\Services\Ai\OpenAiContactAnalyzer;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +14,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(ContactAnalyzer::class, function () {
+            return match (config('services.ai_provider')) {
+                'gemini' => app(GeminiContactAnalyzer::class),
+                default => app(OpenAiContactAnalyzer::class),
+            };
+        });
     }
 
     /**
