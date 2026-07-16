@@ -3,7 +3,11 @@ info:
   title: API лендинга разработчика
   version: 1.0.0
 servers:
-  - url: http://localhost:8000
+  - url: https://testapp1-production-ba44.up.railway.app
+    description: Рабочий API на Railway
+                   - url: http://localhost:8000
+                   description: Локальный запуск
+
 paths:
   /api/contact:
     post:
