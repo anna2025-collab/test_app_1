@@ -123,6 +123,6 @@ class OpenAiContactAnalyzer
 
     private function defaultReply(): string
     {
-        return 'Thank you for your request. I received your message and will contact you soon.';
+        return 'Спасибо за обращение. Я получил ваше сообщение и скоро свяжусь с вами.';
     }
 }

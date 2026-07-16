@@ -14,8 +14,7 @@ class ContactController extends Controller
     public function __construct(
         private readonly ContactService $contacts,
         private readonly MetricsService $metrics,
-    ) {
-    }
+    ) {}
 
     public function __invoke(StoreContactRequest $request): JsonResponse
     {
@@ -23,7 +22,7 @@ class ContactController extends Controller
             $contact = $this->contacts->handle($request->validated());
 
             return response()->json([
-                'message' => 'Contact request accepted.',
+                'message' => 'Обращение принято.',
                 'data' => [
                     'id' => $contact->id,
                     'ai' => [
@@ -40,7 +39,7 @@ class ContactController extends Controller
             report($exception);
 
             return response()->json([
-                'message' => 'Contact request could not be processed.',
+                'message' => 'Не удалось обработать обращение.',
             ], 500);
         }
     }

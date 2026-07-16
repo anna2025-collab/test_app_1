@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\ApiRequestLogger;
+use App\Http\Middleware\CorsMiddleware;
+use App\Http\Middleware\FileRateLimit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,9 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->api(prepend: [
-            App\Http\Middleware\ApiRequestLogger::class,
-            App\Http\Middleware\CorsMiddleware::class,
-            App\Http\Middleware\FileRateLimit::class,
+            ApiRequestLogger::class,
+            CorsMiddleware::class,
+            FileRateLimit::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -38,7 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
             if ($exception instanceof ValidationException) {
                 return response()->json([
-                    'message' => 'Validation failed.',
+                    'message' => 'Ошибка валидации.',
                     'errors' => $exception->errors(),
                 ], 422);
             }
@@ -48,8 +51,8 @@ return Application::configure(basePath: dirname(__DIR__))
                 : 500;
 
             $message = $status === 500
-                ? 'Internal server error.'
-                : ($exception->getMessage() ?: 'Request failed.');
+                ? 'Внутренняя ошибка сервера.'
+                : ($exception->getMessage() ?: 'Не удалось выполнить запрос.');
 
             logger()->error('API exception', [
                 'path' => $request->path(),

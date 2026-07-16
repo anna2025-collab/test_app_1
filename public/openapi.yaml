@@ -36,21 +36,21 @@ paths:
                   maxLength: 2000
       responses:
         "201":
-          description: Contact request accepted
+          description: Обращение принято
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ContactResponse"
         "422":
-          description: Validation error
+          description: Ошибка валидации
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ValidationError"
         "429":
-          description: Too many requests
+          description: Слишком много запросов
         "500":
-          description: Processing error
+          description: Ошибка обработки обращения
   /api/health:
     get:
       summary: Service health

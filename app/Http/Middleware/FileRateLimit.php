@@ -9,9 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FileRateLimit
 {
-    public function __construct(private readonly JsonFileRepository $files)
-    {
-    }
+    public function __construct(private readonly JsonFileRepository $files) {}
 
     public function handle(Request $request, Closure $next): Response
     {
@@ -33,7 +31,7 @@ class FileRateLimit
 
         if (($entry['count'] ?? 0) >= $limit) {
             return response()->json([
-                'message' => 'Too many requests.',
+                'message' => 'Слишком много запросов.',
                 'retry_after' => max(1, ($entry['reset_at'] ?? $now) - $now),
             ], 429);
         }

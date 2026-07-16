@@ -24,7 +24,17 @@ class StoreContactRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'phone.regex' => 'The phone field must contain a valid phone number.',
+            'name.required' => 'Укажите имя.',
+            'name.min' => 'Имя должно содержать минимум 2 символа.',
+            'name.max' => 'Имя не должно быть длиннее 100 символов.',
+            'phone.required' => 'Укажите телефон.',
+            'phone.regex' => 'Телефон должен быть указан в корректном формате.',
+            'email.required' => 'Укажите email.',
+            'email.email' => 'Email должен быть корректным.',
+            'email.max' => 'Email не должен быть длиннее 255 символов.',
+            'comment.required' => 'Укажите комментарий.',
+            'comment.min' => 'Комментарий должен содержать минимум 10 символов.',
+            'comment.max' => 'Комментарий не должен быть длиннее 2000 символов.',
         ];
     }
 }

@@ -114,14 +114,14 @@ curl -X POST http://127.0.0.1:8000/api/contact \
 
 ```json
 {
-  "message": "Contact request accepted.",
+  "message": "Обращение принято.",
   "data": {
     "id": 1,
     "ai": {
       "available": false,
       "sentiment": "neutral",
       "category": "other",
-      "auto_reply": "Thank you for your request. I received your message and will contact you soon."
+      "auto_reply": "Спасибо за обращение. Я получил ваше сообщение и скоро свяжусь с вами."
     }
   }
 }
@@ -131,9 +131,9 @@ curl -X POST http://127.0.0.1:8000/api/contact \
 
 ```json
 {
-  "message": "Validation failed.",
+  "message": "Ошибка валидации.",
   "errors": {
-    "email": ["The email field must be a valid email address."]
+    "email": ["Email должен быть корректным."]
   }
 }
 ```
@@ -142,7 +142,7 @@ curl -X POST http://127.0.0.1:8000/api/contact \
 
 ```json
 {
-  "message": "Too many requests.",
+  "message": "Слишком много запросов.",
   "retry_after": 120
 }
 ```
@@ -151,7 +151,7 @@ curl -X POST http://127.0.0.1:8000/api/contact \
 
 ```json
 {
-  "message": "Contact request could not be processed."
+  "message": "Не удалось обработать обращение."
 }
 ```
 
