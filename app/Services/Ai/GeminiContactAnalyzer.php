@@ -25,10 +25,20 @@ class GeminiContactAnalyzer implements ContactAnalyzer
                 ->withHeaders([
                     'x-goog-api-key' => $apiKey,
                 ])
-                ->post('https://generativelanguage.googleapis.com/v1beta/interactions', [
-                    'model' => config('services.gemini.model'),
-                    'input' => $this->prompt($contact),
-                    'store' => false,
+                ->post(sprintf(
+                    'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent',
+                    config('services.gemini.model'),
+                ), [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $this->prompt($contact)],
+                            ],
+                        ],
+                    ],
+                    'generationConfig' => [
+                        'responseMimeType' => 'application/json',
+                    ],
                 ]);
 
             if (! $response->successful()) {
@@ -81,13 +91,9 @@ PROMPT,
 
     private function extractText(array $payload): string
     {
-        if (is_string($payload['output_text'] ?? null)) {
-            return $payload['output_text'];
-        }
-
-        foreach (($payload['steps'] ?? []) as $step) {
-            foreach (($step['content'] ?? []) as $content) {
-                $text = Arr::get($content, 'text');
+        foreach (($payload['candidates'] ?? []) as $candidate) {
+            foreach (Arr::get($candidate, 'content.parts', []) as $part) {
+                $text = Arr::get($part, 'text');
 
                 if (is_string($text)) {
                     return trim($text);

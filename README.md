@@ -49,7 +49,7 @@ OPENAI_MODEL=gpt-4.1-mini
 OPENAI_TIMEOUT=8
 
 GEMINI_API_KEY=
-GEMINI_MODEL=gemini-3.5-flash
+GEMINI_MODEL=gemini-3.1-flash-lite
 GEMINI_TIMEOUT=8
 
 CONTACT_RATE_LIMIT_MAX=5
@@ -209,7 +209,7 @@ Backend отправляет данные обращения выбранном�
 ```dotenv
 AI_PROVIDER=gemini
 GEMINI_API_KEY=your_gemini_key
-GEMINI_MODEL=gemini-3.5-flash
+GEMINI_MODEL=gemini-3.1-flash-lite
 ```
 
 Для OpenAI можно переключить:
