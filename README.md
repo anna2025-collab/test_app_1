@@ -298,7 +298,69 @@ AI использовался для подготовки начальной р�
 
 ## Деплой
 
-Команды для подготовки проекта на сервере:
+### Railway
+
+Проект подготовлен для Railway через `railway.toml`:
+
+- Railway использует Railpack для сборки Laravel-приложения
+- перед запуском выполняется `php artisan migrate --force`
+- healthcheck настроен на `/api/health`
+
+Шаги:
+
+1. Зайти на `https://railway.com`.
+2. Создать `New Project`.
+3. Выбрать `Deploy from GitHub repo`.
+4. Выбрать репозиторий `anna2025-collab/test_app_1`.
+5. Добавить MySQL: `+ New` -> `Database` -> `MySQL`.
+6. В сервисе Laravel открыть `Variables` и добавить:
+
+```dotenv
+APP_NAME=Лендинг разработчика
+APP_ENV=production
+APP_KEY=base64:...
+APP_DEBUG=false
+APP_URL=https://your-railway-domain.up.railway.app
+
+DB_CONNECTION=mysql
+DB_HOST=${{MySQL.MYSQLHOST}}
+DB_PORT=${{MySQL.MYSQLPORT}}
+DB_DATABASE=${{MySQL.MYSQLDATABASE}}
+DB_USERNAME=${{MySQL.MYSQLUSER}}
+DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
+
+MAIL_MAILER=log
+MAIL_FROM_ADDRESS=hello@example.com
+MAIL_FROM_NAME=Лендинг разработчика
+CONTACT_OWNER_EMAIL=owner@example.com
+
+AI_PROVIDER=gemini
+GEMINI_API_KEY=your_gemini_key
+GEMINI_MODEL=gemini-3.1-flash-lite
+GEMINI_TIMEOUT=8
+
+CONTACT_RATE_LIMIT_MAX=5
+CONTACT_RATE_LIMIT_DECAY_SECONDS=300
+CORS_ALLOWED_ORIGINS=*
+```
+
+`APP_KEY` можно взять локально командой:
+
+```bash
+php artisan key:generate --show
+```
+
+7. В `Settings` -> `Networking` нажать `Generate Domain`.
+8. После деплоя проверить:
+
+```text
+https://your-railway-domain.up.railway.app/api/health
+https://your-railway-domain.up.railway.app/docs
+```
+
+### Другой сервер
+
+Команды для подготовки проекта на обычном сервере:
 
 ```bash
 composer install --no-dev --optimize-autoloader
