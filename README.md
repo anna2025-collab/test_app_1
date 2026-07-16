@@ -126,6 +126,7 @@ curl -X POST http://127.0.0.1:8000/api/contact \
   "data": {
     "id": 1,
     "ai": {
+      "provider": "gemini",
       "available": false,
       "sentiment": "neutral",
       "category": "other",
@@ -288,7 +289,7 @@ AI использовался для подготовки начальной р�
 
 - маршрутизация и middleware bootstrap для Laravel 13 были сверены с установленными файлами фреймворка
 - цикл обработки обращения приведен к требованию ТЗ
-- Gemini-запрос реализован через официальный REST endpoint Interactions API
+- Gemini-запрос реализован через официальный REST endpoint `generateContent`
 - OpenAI-запрос оставлен как альтернативный провайдер через Responses API
 - хранение разделено по ТЗ: MySQL для обращений, JSON для rate limiting, метрик и логов
 - фронтенд переведен на русский язык

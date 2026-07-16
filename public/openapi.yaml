@@ -78,6 +78,8 @@ components:
             ai:
               type: object
               properties:
+                provider:
+                  type: string
                 available:
                   type: boolean
                 sentiment:

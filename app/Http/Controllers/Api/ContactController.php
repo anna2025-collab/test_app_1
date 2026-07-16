@@ -26,6 +26,7 @@ class ContactController extends Controller
                 'data' => [
                     'id' => $contact->id,
                     'ai' => [
+                        'provider' => config('services.ai_provider'),
                         'available' => $contact->ai_available,
                         'sentiment' => $contact->ai_sentiment,
                         'category' => $contact->ai_category,
