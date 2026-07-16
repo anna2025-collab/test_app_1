@@ -1,6 +1,20 @@
 # Backend-сервис для лендинга разработчика
 
 Laravel-проект для лендинг-презентации разработчика с REST API, хранением обращений в MySQL, email-уведомлениями, логированием запросов в JSONL, файловым rate limiting, метриками в JSON, AI-анализом через Google Gemini/OpenAI с graceful fallback, Blade-фронтом и OpenAPI-документацией.
+Рабочий API
+
+Проект развернут на Railway:
+
+https://testapp1-production-ba44.up.railway.app
+
+Проверка сервиса:
+
+https://testapp1-production-ba44.up.railway.app/api/health
+
+Swagger/OpenAPI документация:
+
+https://testapp1-production-ba44.up.railway.app/docs
+
 
 ## Стек технологий
 
