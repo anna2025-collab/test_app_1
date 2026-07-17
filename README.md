@@ -19,7 +19,7 @@ https://testapp1-production-ba44.up.railway.app/docs
 - Файловое хранение: JSON/JSONL для rate limiting, метрик и логов запросов
 - Frontend: Blade, CSS, Fetch API
 - Email: Laravel Mail
-- AI: Google Gemini API или OpenAI Responses API через Laravel HTTP client
+- AI: Google Gemini API 
 - Документация: OpenAPI 3.0 и Swagger UI
 
 ## Запуск проекта
