@@ -7,10 +7,6 @@ Laravel-проект для лендинг-презентации разрабо
 
 https://testapp1-production-ba44.up.railway.app
 
-Проверка сервиса:
-
-https://testapp1-production-ba44.up.railway.app/api/health
-
 Swagger/OpenAPI документация:
 
 https://testapp1-production-ba44.up.railway.app/docs
@@ -94,19 +90,6 @@ OpenAPI-файл: `http://127.0.0.1:8000/openapi.yaml`
 - Repositories: изолируют работу с MySQL и JSON-файлами
 - Mailables: формируют письма владельцу сайта и пользователю
 - Middleware: CORS, логирование запросов и файловый rate limiting
-
-Основные файлы:
-
-- `routes/api.php` - API-маршруты
-- `app/Http/Controllers/Api/ContactController.php` - endpoint формы обратной связи
-- `app/Services/ContactService.php` - полный сценарий обработки обращения
-- `app/Services/Ai/ContactAnalyzer.php` - общий интерфейс AI-анализатора
-- `app/Services/Ai/GeminiContactAnalyzer.php` - интеграция с Google Gemini API
-- `app/Services/Ai/OpenAiContactAnalyzer.php` - интеграция с OpenAI Responses API
-- `app/Repositories/ContactRepository.php` - сохранение обращений в MySQL
-- `app/Repositories/JsonFileRepository.php` - работа с JSON-файлами
-- `app/Http/Middleware/FileRateLimit.php` - защита от спама
-- `app/Http/Middleware/ApiRequestLogger.php` - логирование API-запросов в JSONL
 
 Laravel выбран потому, что он дает готовую инфраструктуру для API, валидации, миграций, mail, middleware и конфигурации через `.env`. Слои разделены так, чтобы контроллер не содержал бизнес-логику, а хранение данных было вынесено в репозитории.
 
@@ -301,12 +284,10 @@ AI использовался для подготовки начальной р�
 
 Что было исправлено и проверено вручную:
 
-- маршрутизация и middleware bootstrap для Laravel 13 были сверены с установленными файлами фреймворка
 - цикл обработки обращения приведен к требованию ТЗ
 - Gemini-запрос реализован через официальный REST endpoint `generateContent`
 - OpenAI-запрос оставлен как альтернативный провайдер через Responses API
 - хранение разделено по ТЗ: MySQL для обращений, JSON для rate limiting, метрик и логов
-- фронтенд переведен на русский язык
 - email-шаблоны и темы писем переведены на русский язык
 - OpenAPI-документация и AI prompt переведены на русский язык
 
