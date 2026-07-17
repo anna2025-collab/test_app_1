@@ -11,7 +11,7 @@
 <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
 <script>
     SwaggerUIBundle({
-        url: '/openapi.yaml',
+        url: '/api-spec.yaml',
         dom_id: '#swagger-ui'
     });
 </script>

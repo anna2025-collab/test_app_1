@@ -2,8 +2,6 @@
 
 return [
 
-    'ai_provider' => env('AI_PROVIDER', 'gemini'),
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -37,15 +35,9 @@ return [
         ],
     ],
 
-    'openai' => [
-        'api_key' => env('OPENAI_API_KEY'),
-        'model' => env('OPENAI_MODEL', 'gpt-4.1-mini'),
-        'timeout' => (int) env('OPENAI_TIMEOUT', 8),
-    ],
-
     'gemini' => [
         'api_key' => env('GEMINI_API_KEY'),
-        'model' => env('GEMINI_MODEL', 'gemini-3.5-flash'),
+        'model' => env('GEMINI_MODEL', 'gemini-3.1-flash-lite'),
         'timeout' => (int) env('GEMINI_TIMEOUT', 8),
     ],
 

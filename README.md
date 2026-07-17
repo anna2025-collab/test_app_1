@@ -1,13 +1,13 @@
 # Backend-сервис для лендинга разработчика
 
-Laravel-проект для лендинг-презентации разработчика с REST API, хранением обращений в MySQL, email-уведомлениями, логированием запросов в JSONL, файловым rate limiting, метриками в JSON, AI-анализом через Google Gemini/OpenAI с graceful fallback, Blade-фронтом и OpenAPI-документацией.
+Laravel-проект для лендинг-презентации разработчика с REST API, хранением обращений в MySQL, email-уведомлениями, логированием запросов в JSONL, файловым rate limiting, метриками в JSON, AI-анализом через Google Gemini с graceful fallback, Blade-фронтом и Swagger-документацией.
 Рабочий API
 
 Проект развернут на Railway:
 
 https://testapp1-production-ba44.up.railway.app
 
-Swagger/OpenAPI документация:
+Swagger-документация:
 
 https://testapp1-production-ba44.up.railway.app/docs
 
@@ -19,8 +19,8 @@ https://testapp1-production-ba44.up.railway.app/docs
 - Файловое хранение: JSON/JSONL для rate limiting, метрик и логов запросов
 - Frontend: Blade, CSS, Fetch API
 - Email: Laravel Mail
-- AI: Google Gemini API 
-- Документация: OpenAPI 3.0 и Swagger UI
+- AI: Google Gemini API через Laravel HTTP client
+- Документация: Swagger UI
 
 ## Запуск проекта
 
@@ -52,12 +52,6 @@ MAIL_MAILER=log
 MAIL_FROM_ADDRESS=hello@example.com
 CONTACT_OWNER_EMAIL=owner@example.com
 
-AI_PROVIDER=gemini
-
-OPENAI_API_KEY=
-OPENAI_MODEL=gpt-4.1-mini
-OPENAI_TIMEOUT=8
-
 GEMINI_API_KEY=
 GEMINI_MODEL=gemini-3.1-flash-lite
 GEMINI_TIMEOUT=8
@@ -78,7 +72,7 @@ php artisan serve
 
 Swagger UI: `http://127.0.0.1:8000/docs`
 
-OpenAPI-файл: `http://127.0.0.1:8000/openapi.yaml`
+Файл спецификации API: `http://127.0.0.1:8000/api-spec.yaml`
 
 ## Архитектура
 
@@ -196,26 +190,17 @@ curl http://127.0.0.1:8000/api/metrics
 
 AI-логика находится в `app/Services/Ai`.
 
-Backend отправляет данные обращения выбранному AI-провайдеру и просит вернуть структурированный JSON:
+Backend отправляет данные обращения в Gemini и просит вернуть структурированный JSON:
 
 - `sentiment`: тональность обращения - `positive`, `neutral` или `negative`
 - `category`: тип обращения - `project_request`, `support`, `partnership`, `hiring` или `other`
 - `auto_reply`: короткий автоматический ответ пользователю
 
-Основной провайдер выбирается через `.env`:
+Gemini настраивается через `.env`:
 
 ```dotenv
-AI_PROVIDER=gemini
 GEMINI_API_KEY=your_gemini_key
 GEMINI_MODEL=gemini-3.1-flash-lite
-```
-
-Для OpenAI можно переключить:
-
-```dotenv
-AI_PROVIDER=openai
-OPENAI_API_KEY=your_openai_key
-OPENAI_MODEL=gpt-4.1-mini
 ```
 
 Gemini API key создается в Google AI Studio: `https://aistudio.google.com/app/apikey`.
@@ -227,7 +212,7 @@ Gemini API key создается в Google AI Studio: `https://aistudio.google.
 Верни только JSON без markdown и пояснений.
 ```
 
-Fallback реализован в AI-анализаторах. Если `GEMINI_API_KEY`/`OPENAI_API_KEY` не задан, провайдер недоступен, произошел timeout или API вернул невалидный JSON, сервис продолжает работу и использует значения по умолчанию:
+Fallback реализован в AI-анализаторе. Если `GEMINI_API_KEY` не задан, Gemini недоступен, произошел timeout или API вернул невалидный JSON, сервис продолжает работу и использует значения по умолчанию:
 
 - `available`: `false`
 - `sentiment`: `neutral`
@@ -277,19 +262,20 @@ AI использовался для подготовки начальной р�
 
 - слоистая структура Laravel-проекта
 - контроллеры, сервисы, репозитории и middleware
-- интеграция Gemini/OpenAI с fallback-логикой
-- OpenAPI-документация
+- интеграция Gemini с fallback-логикой
+- Swagger-документация
 - README
 - Blade-форма обратной связи
 
 Что было исправлено и проверено вручную:
 
-- цикл обработки обращения приведен к требованию ТЗ
-- Gemini-запрос реализован через официальный REST endpoint `generateContent`
-- OpenAI-запрос оставлен как альтернативный провайдер через Responses API
-- хранение разделено по ТЗ: MySQL для обращений, JSON для rate limiting, метрик и логов
-- email-шаблоны и темы писем переведены на русский язык
-- OpenAPI-документация и AI prompt переведены на русский язык
+- спроектирован и вручную проверен полный backend-цикл обработки обращения: валидация входных данных, санитизация, AI-анализ, сохранение в MySQL, отправка писем и формирование JSON-ответа
+- настроена интеграция с Gemini через REST endpoint `generateContent`; отдельно проверены успешный AI-ответ, невалидный ответ, отсутствие API-ключа и fallback без остановки сервиса
+- разделена ответственность между слоями приложения: контроллеры принимают HTTP-запросы, сервисы выполняют бизнес-логику, репозитории отвечают за хранение данных
+- реализовано раздельное хранение по требованиям ТЗ: обращения сохраняются в MySQL, а rate limiting, метрики и логи API-запросов ведутся в JSON/JSONL-файлах
+- настроены глобальная обработка ошибок, CORS, файловый rate limiting и логирование запросов; проверены ответы `201`, `422`, `429` и `500`
+- обновлена OpenAPI-документация под фактические эндпоинты и добавлены curl-примеры для ручной проверки API
+- проверены локальный запуск, работа формы через Fetch API, запись в базу, email-уведомления в log-mailer режиме и деплой на Railway
 
 ## Деплой
 
@@ -329,7 +315,6 @@ MAIL_FROM_ADDRESS=hello@example.com
 MAIL_FROM_NAME=Лендинг разработчика
 CONTACT_OWNER_EMAIL=owner@example.com
 
-AI_PROVIDER=gemini
 GEMINI_API_KEY=your_gemini_key
 GEMINI_MODEL=gemini-3.1-flash-lite
 GEMINI_TIMEOUT=8
